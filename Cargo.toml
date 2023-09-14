@@ -1,0 +1,21 @@
+[package]
+name = "rocket-ses-1"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rocket = { version = "=0.5.0-rc.3", features = ["secrets", "json"] }
+rocket_db_pools = { version = "=0.1.0-rc.3", features = ["sqlx_postgres", "deadpool_redis"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+dotenv = "0.15.0"
+handlebars = "3.5.2"
+uuid = { version = "1.4.1", features = ["v4", "fast-rng", "serde"] }
+tokio = {version = "1.30.0", features = ["full"]}
+tokio-util = { version = "0.7", features = ["io"] }
+async-trait = "0.1"
+aws-creds = "0.35.0"
+aws-region = "0.25.3"
+aws-config = "0.56.1"
+aws-sdk-sesv2 = "0.30.0"
+aws-types = "0.56.1"
