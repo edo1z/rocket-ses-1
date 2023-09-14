@@ -1,11 +1,23 @@
-#[macro_use] extern crate rocket;
+#[macro_use]
+extern crate rocket;
+
+use dotenv::dotenv;
+use rocket::State;
 
 #[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
+fn index(hoge: &State<String>) -> String {
+    format!("Hello, world! {}", hoge)
+}
+
+#[post("/send_email_test")]
+fn send_email_tets() -> &'static str {
+    "Send email test"
 }
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index])
+    dotenv().ok();
+    rocket::build()
+    .manage("hoge".to_string())
+    .mount("/", routes![index, send_email_tets])
 }
