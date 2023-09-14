@@ -1,23 +1,33 @@
 #[macro_use]
 extern crate rocket;
 
+pub mod email;
+
+use crate::email::{init_ses, send_email, EmailParams, SesClient};
 use dotenv::dotenv;
 use rocket::State;
 
-#[get("/")]
-fn index(hoge: &State<String>) -> String {
-    format!("Hello, world! {}", hoge)
-}
-
 #[post("/send_email_test")]
-fn send_email_tets() -> &'static str {
-    "Send email test"
+async fn send_email_test(client: &State<SesClient>) -> Result<(), String> {
+    let params = EmailParams {
+        to: "hoge@example.com".to_string(),
+        from: "from@example.com".to_string(),
+        subject: "test".to_string(),
+        body: "Hello, World!".to_string(),
+    };
+
+    send_email(client, params)
+        .await
+        .map_err(|e| e.to_string())?;
+
+    Ok(())
 }
 
 #[launch]
-fn rocket() -> _ {
+async fn rocket() -> _ {
     dotenv().ok();
+
     rocket::build()
-    .manage("hoge".to_string())
-    .mount("/", routes![index, send_email_tets])
+        .manage(init_ses().await)
+        .mount("/", routes![send_email_test])
 }
